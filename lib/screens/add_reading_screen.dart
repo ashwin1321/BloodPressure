@@ -41,7 +41,7 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppStrings.get('success_add', provider.languageCode)),
-          backgroundColor: const Color(0xFF4A90E2),
+          backgroundColor: const Color.fromARGB(255, 8, 35, 66),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

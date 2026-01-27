@@ -22,7 +22,7 @@ class BPCard extends StatelessWidget {
     const Color dateGrey = Color(0xFF607177);
     const Color unitGrey = Color(0xFF7B878E);
 
-    const Color rightPanel = Color(0xFFBFEFE6);
+    const Color rightPanel = Color.fromARGB(255, 135, 215, 210);
     const Color rightPanelBorder = Color(0xFFB4E8DE);
 
     // Reduced width so left texts get more space
@@ -69,7 +69,12 @@ class BPCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: unitGrey.withOpacity(0.75),
+                          color: const Color.fromARGB(
+                            255,
+                            72,
+                            78,
+                            82,
+                          ).withOpacity(0.75),
                         ),
                       ),
                     ),
@@ -105,7 +110,7 @@ class BPCard extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.w800,
-                                color: valueColor,
+                                color: Color.fromARGB(255, 11, 118, 99),
                                 height: 1.0,
                               ),
                             ),
@@ -125,7 +130,7 @@ class BPCard extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.w800,
-                                color: valueColor,
+                                color: Color.fromARGB(255, 58, 60, 60),
                                 height: 1.0,
                               ),
                             ),
