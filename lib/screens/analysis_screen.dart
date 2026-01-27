@@ -431,18 +431,25 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
         ],
       ),
       child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        top: false,
+        child: SizedBox(
+          height: 66,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildNavItem(
                 icon: Icons.history,
                 label: AppStrings.get('history', lang),
                 isActive: false,
-                onTap: () => Navigator.pop(context),
+                onTap: () => Navigator.pushNamed(context, '/dashboard'),
               ),
-              _buildAddButton(context),
+
+              // 👇 Pull button upward
+              Transform.translate(
+                offset: const Offset(0, -20),
+                child: _buildAddButton(context),
+              ),
+
               _buildNavItem(
                 icon: Icons.analytics_outlined,
                 label: AppStrings.get('analytics', lang),
@@ -465,23 +472,26 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 6,
+        ), // 👈 reduced
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
+              size: 22, // 👈 slightly smaller
               color: isActive
                   ? const Color(0xFF4A90E2)
                   : const Color(0xFF95A5A6),
-              size: 24,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 3),
             Text(
               label,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 11, // 👈 slightly smaller
                 color: isActive
                     ? const Color(0xFF4A90E2)
                     : const Color(0xFF95A5A6),
@@ -495,26 +505,30 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
   }
 
   Widget _buildAddButton(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF4A90E2),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF4A90E2).withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => Navigator.pushNamed(context, '/add'),
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            child: Icon(Icons.add, color: Colors.white, size: 28),
+    return SizedBox(
+      width: 78,
+      height: 78,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF4A90E2),
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF4A90E2).withOpacity(0.15),
+              blurRadius: 14,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          shape: const CircleBorder(),
+          child: InkWell(
+            onTap: () => Navigator.pushNamed(context, '/add'),
+            customBorder: const CircleBorder(),
+            child: const Center(
+              child: Icon(Icons.add, color: Colors.white, size: 34),
+            ),
           ),
         ),
       ),
