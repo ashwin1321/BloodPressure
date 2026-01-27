@@ -94,7 +94,12 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            const Color(0xFF4A90E2).withOpacity(0.2),
+                            const Color.fromARGB(
+                              255,
+                              16,
+                              155,
+                              130,
+                            ).withOpacity(0.2),
                             const Color(0xFF50E3C2).withOpacity(0.2),
                           ],
                         ),
@@ -103,7 +108,7 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                       child: Icon(
                         Icons.favorite,
                         size: 50,
-                        color: const Color(0xFF4A90E2),
+                        color: Color.fromARGB(255, 16, 155, 130),
                       ),
                     ),
                   ),
@@ -153,7 +158,7 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide(
-                          color: const Color(0xFF4A90E2),
+                          color: Color.fromARGB(255, 16, 155, 130),
                           width: 2,
                         ),
                       ),
@@ -219,7 +224,7 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide(
-                          color: const Color(0xFF4A90E2),
+                          color: Color.fromARGB(255, 16, 155, 130),
                           width: 2,
                         ),
                       ),
@@ -246,10 +251,15 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                   ElevatedButton(
                     onPressed: _isLoading ? null : _saveRecord,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4A90E2),
+                      backgroundColor: const Color.fromARGB(255, 16, 155, 130),
                       foregroundColor: Colors.white,
                       elevation: 0,
-                      shadowColor: const Color(0xFF4A90E2).withOpacity(0.3),
+                      shadowColor: const Color.fromARGB(
+                        255,
+                        16,
+                        155,
+                        130,
+                      ).withOpacity(0.3),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
