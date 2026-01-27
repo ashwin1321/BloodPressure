@@ -27,12 +27,13 @@ class BPProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addRecord(int systolic, int diastolic) async {
+  Future<void> addRecord(int systolic, int diastolic, {DateTime? date}) async {
+    final timestamp = date ?? DateTime.now();
     final record = BPRecord(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: timestamp.millisecondsSinceEpoch.toString(),
       systolic: systolic,
       diastolic: diastolic,
-      timestamp: DateTime.now(),
+      timestamp: timestamp,
     );
 
     await _storageService.saveRecord(record);

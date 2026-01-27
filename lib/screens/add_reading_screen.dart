@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../providers/bp_provider.dart';
 import '../utils/localization.dart';
 
@@ -15,13 +16,64 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
   final _formKey = GlobalKey<FormState>();
   final _systolicController = TextEditingController();
   final _diastolicController = TextEditingController();
+  final _dateController = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final lang = Provider.of<BPProvider>(context, listen: false).languageCode;
+    final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
+    _dateController.text = '${AppStrings.get('today', lang)} ($dateStr)';
+  }
 
   @override
   void dispose() {
     _systolicController.dispose();
     _diastolicController.dispose();
+    _dateController.dispose();
     super.dispose();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: const Color.fromARGB(255, 16, 155, 130),
+              onPrimary: Colors.white,
+              onSurface: const Color(0xFF2C3E50),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      setState(() {
+        final now = DateTime.now();
+        final isToday = DateUtils.isSameDay(picked, now);
+        _selectedDate = isToday ? now : picked;
+
+        final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
+        final lang = Provider.of<BPProvider>(
+          context,
+          listen: false,
+        ).languageCode;
+
+        if (isToday) {
+          _dateController.text = '${AppStrings.get('today', lang)} ($dateStr)';
+        } else {
+          _dateController.text = dateStr;
+        }
+      });
+    }
   }
 
   Future<void> _saveRecord() async {
@@ -33,7 +85,14 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
     final diastolic = int.parse(_diastolicController.text);
 
     final provider = Provider.of<BPProvider>(context, listen: false);
-    await provider.addRecord(systolic, diastolic);
+
+    // If it's today, we use the current precise time for better sorting,
+    // otherwise we use the selected date (which might be midnight of a past day).
+    final now = DateTime.now();
+    final isToday = DateUtils.isSameDay(_selectedDate, now);
+    final finalDate = isToday ? now : _selectedDate;
+
+    await provider.addRecord(systolic, diastolic, date: finalDate);
 
     setState(() => _isLoading = false);
 
@@ -41,7 +100,7 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppStrings.get('success_add', provider.languageCode)),
-          backgroundColor: const Color.fromARGB(255, 8, 35, 66),
+          backgroundColor: const Color(0xFF4A90E2),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -78,19 +137,19 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
             centerTitle: true,
           ),
           body: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
 
                   // Illustration
                   Center(
                     child: Container(
-                      width: 100,
-                      height: 100,
+                      width: 90,
+                      height: 90,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
@@ -107,24 +166,24 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                       ),
                       child: Icon(
                         Icons.favorite,
-                        size: 50,
+                        size: 40,
                         color: Color.fromARGB(255, 16, 155, 130),
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 20),
 
                   // Systolic Input
                   Text(
                     '${AppStrings.get('systolic', lang)} (${AppStrings.get('mmHg', lang)})',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: const Color(0xFF2C3E50),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
                   TextFormField(
                     controller: _systolicController,
                     keyboardType: TextInputType.number,
@@ -133,7 +192,7 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                       LengthLimitingTextInputFormatter(3),
                     ],
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF2C3E50),
                     ),
@@ -164,7 +223,7 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 20,
-                        vertical: 20,
+                        vertical: 14,
                       ),
                     ),
                     validator: (value) {
@@ -179,18 +238,18 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                     },
                   ),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
 
                   // Diastolic Input
                   Text(
                     '${AppStrings.get('diastolic', lang)} (${AppStrings.get('mmHg', lang)})',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: const Color(0xFF2C3E50),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
                   TextFormField(
                     controller: _diastolicController,
                     keyboardType: TextInputType.number,
@@ -199,7 +258,7 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                       LengthLimitingTextInputFormatter(3),
                     ],
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF2C3E50),
                     ),
@@ -230,7 +289,7 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 20,
-                        vertical: 20,
+                        vertical: 14,
                       ),
                     ),
                     validator: (value) {
@@ -245,7 +304,60 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                     },
                   ),
 
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 16),
+
+                  // Date Input
+                  Text(
+                    AppStrings.get('date', lang),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF2C3E50),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _dateController,
+                    readOnly: true,
+                    onTap: () => _selectDate(context),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF2C3E50),
+                    ),
+                    decoration: InputDecoration(
+                      suffixIcon: Icon(
+                        Icons.calendar_today,
+                        color: Color.fromARGB(255, 16, 155, 130),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(
+                          color: Colors.grey.shade200,
+                          width: 2,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 16, 155, 130),
+                          width: 2,
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 14,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
 
                   // Save Button
                   ElevatedButton(
@@ -263,7 +375,7 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: _isLoading
                         ? SizedBox(
@@ -285,7 +397,7 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                           ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
 
                   // Info text
                   Center(

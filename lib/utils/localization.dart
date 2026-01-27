@@ -20,6 +20,7 @@ class AppStrings {
       'mmHg': 'mmHg',
       'today': 'Today',
       'bp_trends': 'BP Trends',
+      'date': 'Date',
     },
     'ne': {
       'app_title': 'रक्तचाप',
@@ -41,6 +42,7 @@ class AppStrings {
       'mmHg': 'mmHg',
       'today': 'आज',
       'bp_trends': 'रक्तचाप प्रवृत्तिहरू',
+      'date': 'मिति',
     },
   };
 
