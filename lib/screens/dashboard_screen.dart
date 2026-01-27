@@ -177,8 +177,8 @@ class DashboardScreen extends StatelessWidget {
               icon,
               size: 22, // 👈 slightly smaller
               color: isActive
-                  ? const Color(0xFF4A90E2)
-                  : const Color(0xFF95A5A6),
+                  ? Color.fromARGB(255, 16, 155, 130)
+                  : Color.fromARGB(255, 150, 182, 176),
             ),
             const SizedBox(height: 3),
             Text(
@@ -186,8 +186,8 @@ class DashboardScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11, // 👈 slightly smaller
                 color: isActive
-                    ? const Color(0xFF4A90E2)
-                    : const Color(0xFF95A5A6),
+                    ? Color.fromARGB(255, 16, 155, 130)
+                    : Color.fromARGB(255, 150, 182, 176),
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
@@ -203,11 +203,11 @@ class DashboardScreen extends StatelessWidget {
       height: 78,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF4A90E2),
+          color: Color.fromARGB(255, 16, 155, 130),
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF4A90E2).withOpacity(0.15),
+              color: Color.fromARGB(255, 16, 155, 130).withOpacity(0.15),
               blurRadius: 14,
               offset: const Offset(0, 8),
             ),
