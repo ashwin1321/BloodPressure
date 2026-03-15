@@ -127,282 +127,294 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
                 _buildTopNavbar(context, AppStrings.get('add_data', lang)),
                 Expanded(
                   child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: 10),
 
-                  // Illustration
-                  Center(
-                    child: Container(
-                      width: 90,
-                      height: 90,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            const Color.fromARGB(
-                              255,
-                              16,
-                              155,
-                              130,
-                            ).withOpacity(0.2),
-                            const Color(0xFF50E3C2).withOpacity(0.2),
-                          ],
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.favorite,
-                        size: 40,
-                        color: Color.fromARGB(255, 16, 155, 130),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Systolic Input
-                  Text(
-                    '${AppStrings.get('systolic', lang)} (${AppStrings.get('mmHg', lang)})',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF2C3E50),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _systolicController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(3),
-                    ],
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF2C3E50),
-                    ),
-                    decoration: InputDecoration(
-                      hintText: '130',
-                      hintStyle: TextStyle(
-                        color: const Color(0xFF95A5A6).withOpacity(0.5),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade200,
-                          width: 2,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(255, 16, 155, 130),
-                          width: 2,
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 14,
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppStrings.get('validation_error', lang);
-                      }
-                      final intValue = int.tryParse(value);
-                      if (intValue == null || intValue < 70 || intValue > 200) {
-                        return 'Enter value between 70-200';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Diastolic Input
-                  Text(
-                    '${AppStrings.get('diastolic', lang)} (${AppStrings.get('mmHg', lang)})',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF2C3E50),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _diastolicController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(3),
-                    ],
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF2C3E50),
-                    ),
-                    decoration: InputDecoration(
-                      hintText: '85',
-                      hintStyle: TextStyle(
-                        color: const Color(0xFF95A5A6).withOpacity(0.5),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade200,
-                          width: 2,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(255, 16, 155, 130),
-                          width: 2,
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 14,
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppStrings.get('validation_error', lang);
-                      }
-                      final intValue = int.tryParse(value);
-                      if (intValue == null || intValue < 40 || intValue > 130) {
-                        return 'Enter value between 40-130';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Date Input
-                  Text(
-                    AppStrings.get('date', lang),
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF2C3E50),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _dateController,
-                    readOnly: true,
-                    onTap: () => _selectDate(context),
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF2C3E50),
-                    ),
-                    decoration: InputDecoration(
-                      suffixIcon: Icon(
-                        Icons.calendar_today,
-                        color: Color.fromARGB(255, 16, 155, 130),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade200,
-                          width: 2,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(255, 16, 155, 130),
-                          width: 2,
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 14,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Save Button
-                  ElevatedButton(
-                    onPressed: _isLoading ? null : _saveRecord,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 16, 155, 130),
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shadowColor: const Color.fromARGB(
-                        255,
-                        16,
-                        155,
-                        130,
-                      ).withOpacity(0.3),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: _isLoading
-                        ? SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
+                          // Illustration
+                          Center(
+                            child: Container(
+                              width: 90,
+                              height: 90,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    const Color.fromARGB(
+                                      255,
+                                      16,
+                                      155,
+                                      130,
+                                    ).withOpacity(0.2),
+                                    const Color(0xFF50E3C2).withOpacity(0.2),
+                                  ],
+                                ),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.favorite,
+                                size: 40,
+                                color: Color.fromARGB(255, 16, 155, 130),
                               ),
                             ),
-                          )
-                        : Text(
-                            AppStrings.get('save_record', lang),
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          // Systolic Input
+                          Text(
+                            '${AppStrings.get('systolic', lang)} (${AppStrings.get('mmHg', lang)})',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF2C3E50),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _systolicController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(3),
+                            ],
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF2C3E50),
+                            ),
+                            decoration: InputDecoration(
+                              hintText: '130',
+                              hintStyle: TextStyle(
+                                color: const Color(0xFF95A5A6).withOpacity(0.5),
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade200,
+                                  width: 2,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 16, 155, 130),
+                                  width: 2,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 14,
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AppStrings.get('validation_error', lang);
+                              }
+                              final intValue = int.tryParse(value);
+                              if (intValue == null ||
+                                  intValue < 70 ||
+                                  intValue > 200) {
+                                return 'Enter value between 70-200';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Diastolic Input
+                          Text(
+                            '${AppStrings.get('diastolic', lang)} (${AppStrings.get('mmHg', lang)})',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF2C3E50),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _diastolicController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(3),
+                            ],
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF2C3E50),
+                            ),
+                            decoration: InputDecoration(
+                              hintText: '85',
+                              hintStyle: TextStyle(
+                                color: const Color(0xFF95A5A6).withOpacity(0.5),
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade200,
+                                  width: 2,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 16, 155, 130),
+                                  width: 2,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 14,
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AppStrings.get('validation_error', lang);
+                              }
+                              final intValue = int.tryParse(value);
+                              if (intValue == null ||
+                                  intValue < 40 ||
+                                  intValue > 130) {
+                                return 'Enter value between 40-130';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Date Input
+                          Text(
+                            AppStrings.get('date', lang),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF2C3E50),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _dateController,
+                            readOnly: true,
+                            onTap: () => _selectDate(context),
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
+                              color: const Color(0xFF2C3E50),
+                            ),
+                            decoration: InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.calendar_today,
+                                color: Color.fromARGB(255, 16, 155, 130),
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade200,
+                                  width: 2,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 16, 155, 130),
+                                  width: 2,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 14,
+                              ),
                             ),
                           ),
-                  ),
 
-                  const SizedBox(height: 12),
+                          const SizedBox(height: 24),
 
-                  // Info text
-                  Center(
-                    child: Text(
-                      'Normal BP: 120/80 mmHg',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: const Color(0xFF95A5A6),
+                          // Save Button
+                          ElevatedButton(
+                            onPressed: _isLoading ? null : _saveRecord,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color.fromARGB(
+                                255,
+                                16,
+                                155,
+                                130,
+                              ),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              shadowColor: const Color.fromARGB(
+                                255,
+                                16,
+                                155,
+                                130,
+                              ).withOpacity(0.3),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                            ),
+                            child: _isLoading
+                                ? SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    AppStrings.get('save_record', lang),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // Info text
+                          Center(
+                            child: Text(
+                              'Normal BP: 120/80 mmHg',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: const Color(0xFF95A5A6),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
                 ),
               ],
             ),

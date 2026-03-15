@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static const Color primaryBlue = Color(0xFF4A90E2);
+  static const Color primaryGreen = Color(0xFF109B82);
   static const Color accentGreen = Color(0xFF50E3C2);
   static const Color softRed = Color(0xFFE57373);
   static const Color backgroundWhite = Color(0xFFF5F7FA);
@@ -14,9 +14,9 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       scaffoldBackgroundColor: backgroundWhite,
-      primaryColor: primaryBlue,
+      primaryColor: primaryGreen,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryBlue,
+        seedColor: primaryGreen,
         secondary: accentGreen,
         background: backgroundWhite,
         error: softRed,
@@ -45,13 +45,13 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: primaryBlue),
+          borderSide: const BorderSide(color: primaryGreen),
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryBlue,
+          backgroundColor: primaryGreen,
           foregroundColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(

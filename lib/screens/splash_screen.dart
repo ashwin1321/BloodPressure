@@ -49,63 +49,83 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return Opacity(
-              opacity: _fadeAnimation.value,
-              child: Transform.scale(
-                scale: _scaleAnimation.value,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
+      backgroundColor: const Color(0xFFF8FAFC), // Ultra-clean background
+      body: Stack(
+        children: [
+          // Subtle background pattern or glow can go here
+          Center(
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return Opacity(
+                  opacity: _fadeAnimation.value,
+                  child: Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Minimalist Gradient Icon (no "square bracket")
+                        ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [
+                              Color.fromARGB(255, 34, 184, 156),
+                              Color.fromARGB(255, 11, 118, 99),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ).createShader(bounds),
+                          child: const Icon(
+                            Icons.favorite,
+                            color: Colors
+                                .white, // Color is overridden by ShaderMask
+                            size: 100,
                           ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(20),
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        fit: BoxFit.contain,
-                      ),
+                        ),
+                        const SizedBox(height: 40),
+                        const Text(
+                          'HeartSync',
+                          style: TextStyle(
+                            fontSize: 42,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xFF1E293B),
+                            letterSpacing: -1.5,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'STAY HEALTHY TODAY',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: const Color(0xFF94A3B8),
+                            letterSpacing: 4.0,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Blood Pressure',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF2C3E50),
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Monitor Your Health',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: const Color(0xFF95A5A6),
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-                  ],
+                  ),
+                );
+              },
+            ),
+          ),
+          // Minimal loading indicator at the bottom
+          Positioned(
+            bottom: 60,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: SizedBox(
+                width: 40,
+                height: 2,
+                child: LinearProgressIndicator(
+                  backgroundColor: const Color(0xFFE2E8F0),
+                  color: const Color.fromARGB(255, 16, 155, 130),
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

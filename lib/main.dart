@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => BPProvider(),
       child: MaterialApp(
-        title: 'Blood Pressure Monitor',
+        title: 'HeartSync',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         initialRoute: '/',
