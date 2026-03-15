@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../providers/bp_provider.dart';
 import '../utils/localization.dart';
 import '../widgets/bp_card.dart';
@@ -15,60 +16,38 @@ class DashboardScreen extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: const Color(0xFFF5F7FA),
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  AppStrings.get('app_title', lang),
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF2C3E50),
+          body: SafeArea(
+            bottom: false,
+            child: provider.isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(color: Color(0xFF4A90E2)),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildTopNavbar(),
+                      _buildHeader(provider),
+                      const SizedBox(height: 12),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          'Recent History',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF2C3E50),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Expanded(
+                        child: provider.records.isEmpty
+                            ? _buildEmptyState(lang)
+                            : _buildRecordsList(provider, lang),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF4A90E2).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    lang.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF4A90E2),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.language),
-                onPressed: () => provider.toggleLanguage(),
-                tooltip: 'Switch Language',
-              ),
-            ],
           ),
-          body: provider.isLoading
-              ? Center(
-                  child: CircularProgressIndicator(
-                    color: const Color(0xFF4A90E2),
-                  ),
-                )
-              : provider.records.isEmpty
-              ? _buildEmptyState(lang)
-              : _buildRecordsList(provider, lang),
           bottomNavigationBar: _buildBottomNav(context, lang),
         );
       },
@@ -102,7 +81,7 @@ class DashboardScreen extends StatelessWidget {
 
   Widget _buildRecordsList(BPProvider provider, String lang) {
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.only(top: 0, bottom: 20),
       itemCount: provider.records.length,
       itemBuilder: (context, index) {
         final record = provider.records[index];
@@ -224,6 +203,315 @@ class DashboardScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BPProvider provider) {
+    int sys = 0;
+    int dia = 0;
+    String status = "No Data";
+    DateTime? date;
+
+    List<Color> gradientColors = [
+      const Color.fromARGB(255, 34, 184, 156),
+      const Color.fromARGB(255, 11, 118, 99),
+    ];
+    Color shadowColor = const Color.fromARGB(
+      255,
+      16,
+      155,
+      130,
+    ).withOpacity(0.35);
+    String adviceMessage = "Your blood pressure is looking great!";
+
+    if (provider.records.isNotEmpty) {
+      sys = provider.records.first.systolic;
+      dia = provider.records.first.diastolic;
+      date = provider.records.first.timestamp;
+
+      if (sys >= 180 || dia >= 120) {
+        status = 'Crisis';
+        gradientColors = [const Color(0xFFEF4444), const Color(0xFFB91C1C)];
+        shadowColor = const Color(0xFFEF4444).withOpacity(0.35);
+        adviceMessage = "Emergency! Please seek medical help immediately.";
+      } else if (sys >= 140 || dia >= 90) {
+        status = 'High';
+        gradientColors = [const Color(0xFFF97316), const Color(0xFFC2410C)];
+        shadowColor = const Color(0xFFF97316).withOpacity(0.35);
+        adviceMessage = "High BP detected. Please visit a doctor soon.";
+      } else if (sys > 130 || dia > 85) {
+        status = 'Elevated';
+        gradientColors = [const Color(0xFFF59E0B), const Color(0xFFB45309)];
+        shadowColor = const Color(0xFFF59E0B).withOpacity(0.35);
+        adviceMessage = "Elevated BP. Monitor closely and stay hydrated.";
+      } else if (sys < 110 || dia < 70) {
+        status = 'Low';
+        gradientColors = [const Color(0xFF3B82F6), const Color(0xFF1D4ED8)];
+        shadowColor = const Color(0xFF3B82F6).withOpacity(0.35);
+        adviceMessage = "Low BP detected. Consult a doctor if you feel dizzy.";
+      } else {
+        status = 'Normal';
+        gradientColors = [
+          const Color.fromARGB(255, 34, 184, 156),
+          const Color.fromARGB(255, 11, 118, 99),
+        ];
+        shadowColor = const Color.fromARGB(255, 16, 155, 130).withOpacity(0.35);
+        adviceMessage = "Your blood pressure is looking great!";
+      }
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (provider.records.isNotEmpty)
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: gradientColors,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: shadowColor,
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Latest Reading',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          if (date != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                DateFormat(
+                                  'MMM dd, yyyy • hh:mm a',
+                                ).format(date),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          const SizedBox(height: 12),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '$sys',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 34,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1,
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 4.0),
+                                child: Text(
+                                  '/',
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                '$dia',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 34,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 4),
+                                child: Text(
+                                  'mmHg',
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.25),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              status,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.info_outline,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            adviceMessage,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTopNavbar() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color.fromARGB(255, 34, 184, 156),
+                      Color.fromARGB(255, 11, 118, 99),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color.fromARGB(255, 16, 155, 130).withOpacity(0.35),
+                      blurRadius: 14,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: const Icon(Icons.favorite, color: Colors.white, size: 26),
+              ),
+              const SizedBox(width: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'HeartSync',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF1E293B),
+                      letterSpacing: -0.5,
+                      height: 1.1,
+                    ),
+                  ),
+                  Text(
+                    'Stay healthy today',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF94A3B8),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(color: const Color(0xFFF1F5F9), width: 2),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Icon(Icons.notifications_none_rounded, color: Color(0xFF64748B), size: 24),
+          ),
+        ],
       ),
     );
   }

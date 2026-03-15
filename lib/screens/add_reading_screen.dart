@@ -119,24 +119,14 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
 
         return Scaffold(
           backgroundColor: const Color(0xFFF5F7FA),
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context),
-            ),
-            title: Text(
-              AppStrings.get('add_data', lang),
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF2C3E50),
-              ),
-            ),
-            centerTitle: true,
-          ),
-          body: SingleChildScrollView(
+          body: SafeArea(
+            bottom: false,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildTopNavbar(context, AppStrings.get('add_data', lang)),
+                Expanded(
+                  child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: Form(
               key: _formKey,
@@ -413,8 +403,55 @@ class _AddReadingScreenState extends State<AddReadingScreen> {
               ),
             ),
           ),
+                ),
+              ],
+            ),
+          ),
         );
       },
+    );
+  }
+
+  Widget _buildTopNavbar(BuildContext context, String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 16, 24, 12),
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () => Navigator.pop(context),
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Color(0xFF1E293B),
+                size: 20,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFF1E293B),
+              letterSpacing: -1,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -286,7 +286,16 @@ _BpStatus _bpStatus(int sys, int dia) {
     );
   }
 
-  if (sys < 90 || dia < 60) {
+  if (sys > 130 || dia > 85) {
+    return const _BpStatus(
+      label: 'Elevated',
+      fg: elevatedFg,
+      bg: elevatedBg,
+      icon: Icons.trending_up_rounded,
+    );
+  }
+
+  if (sys < 110 || dia < 70) {
     return const _BpStatus(
       label: 'Low',
       fg: lowFg,
@@ -295,19 +304,10 @@ _BpStatus _bpStatus(int sys, int dia) {
     );
   }
 
-  if (sys <= 129 && dia <= 80) {
-    return const _BpStatus(
-      label: 'Normal',
-      fg: normalFg,
-      bg: normalBg,
-      icon: Icons.check_circle_rounded,
-    );
-  }
-
   return const _BpStatus(
-    label: 'Elevated',
-    fg: elevatedFg,
-    bg: elevatedBg,
-    icon: Icons.trending_up_rounded,
+    label: 'Normal',
+    fg: normalFg,
+    bg: normalBg,
+    icon: Icons.check_circle_rounded,
   );
 }
