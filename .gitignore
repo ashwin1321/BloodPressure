@@ -45,11 +45,11 @@ app.*.map.json
 /android/app/release
 
 # Project Documentation (Ignored except for README)
-ARCHITECTURE.md
-CARD_DESIGN_UPDATE.md
-FEATURES.md
-IMPLEMENTATION_COMPLETE.md
-PROJECT_STRUCTURE.md
-TUTORIAL.md
+/ARCHITECTURE.md
+/CARD_DESIGN_UPDATE.md
+/FEATURES.md
+/IMPLEMENTATION_COMPLETE.md
+/PROJECT_STRUCTURE.md
+/TUTORIAL.md
 /test/*.dart.old
 
